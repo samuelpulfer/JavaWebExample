@@ -22,6 +22,7 @@ public class FileDao {
                 writer = new PrintWriter(new FileWriter(f));
                 writer.println(0);
             }
+            System.out.println(f.getAbsolutePath());
             if (writer != null) {
                 writer.close();
             }
