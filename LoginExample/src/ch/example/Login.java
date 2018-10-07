@@ -88,8 +88,8 @@ public class Login extends HttpServlet {
 				session.setAttribute("User", emp);
 				session.setAttribute("Authenticated", true);
 				session.setAttribute("Authorized", false);
+				session.removeAttribute("customLoginMessage");
 			}
-				
 		}
 		System.out.println(jh.toString());
 		response.setContentType("application/json");

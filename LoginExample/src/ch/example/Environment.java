@@ -33,9 +33,13 @@ public class Environment extends HttpServlet {
 		if(session.isNew()) {
 			session.setMaxInactiveInterval(60);
 			session.setAttribute("User", new LocalEmployee(request.getRemoteUser()));
-			session.setAttribute("Authenticated", false);
+			if(request.getRemoteUser() == null)
+				session.setAttribute("Authenticated", false);
+			else
+				session.setAttribute("Authenticated", true);
 			session.setAttribute("Authorized", false);
 		}
+		
 		
 		// Logout
 		String logout = request.getParameter("logout");
@@ -46,8 +50,18 @@ public class Environment extends HttpServlet {
 		RequestDispatcher rd;
 		if((Boolean) session.getAttribute("Authenticated") == false)
 			rd = request.getRequestDispatcher("/WEB-INF/Login.jsp");
-		else
-			rd = request.getRequestDispatcher("/WEB-INF/Environment.jsp");
+		else {
+			// Authorization
+			Authorization authorization = new EnvironmentAuthorization();
+			if(authorization.authorize((Employee) session.getAttribute("User"))) {
+				session.removeAttribute("customLoginMessage");
+				rd = request.getRequestDispatcher("/WEB-INF/Environment.jsp");
+			} else {
+				session.setAttribute("customLoginMessage", "You are not allowed to access this site. Please Login with a authorized user.");
+				rd = request.getRequestDispatcher("/WEB-INF/Login.jsp");
+			}
+		}
+			
 		rd.forward(request, response);
 	}
 

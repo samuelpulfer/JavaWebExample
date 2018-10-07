@@ -25,7 +25,16 @@
 	<div class="invisible">
 		<div id="path"><%= servletPath %></div>
 	</div>
+	
 	<form class="form-signin">
+		<%
+			String customLoginMessage = (String) session.getAttribute("customLoginMessage");
+			if(customLoginMessage != null) { %>
+				<div id="messageTop" class="alert alert-danger" role="alert"><%= customLoginMessage %></div>
+
+			<% }  
+		%>
+		
 		<img class="mb-4" src="static/img/underconstruction.png" alt="" width="72" height="72">
 		<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 		
